@@ -1,10 +1,4 @@
 #!/usr/bin/env python
-#encoding:utf-8
-#author:dbr/Ben
-#project:tvnamer
-#repository:http://github.com/dbr/tvnamer
-#license:Creative Commons GNU GPL v2
-# http://creativecommons.org/licenses/GPL/2.0/
 
 """Functional-test runner for use in other tests
 
@@ -200,7 +194,7 @@ def verify_out_data(out_data, expected_files, expected_returncode = 0):
     p("Return code: %d" % out_data['returncode'])
 
     p("Expected files:", expected_files)
-    p("Got files:", out_data['files'])
+    p("Got files:     ", [x for x in out_data['files']])
 
     p("\n" + "*" * 20 + "\n")
     p("stdout:\n")

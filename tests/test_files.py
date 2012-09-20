@@ -1,10 +1,4 @@
 #!/usr/bin/env python
-#encoding:utf-8
-#author:dbr/Ben
-#project:tvnamer
-#repository:http://github.com/dbr/tvnamer
-#license:Creative Commons GNU GPL v2
-# http://creativecommons.org/licenses/GPL/2.0/
 
 """Test file names for tvnamer
 """
@@ -112,6 +106,30 @@ files['s01e01_format'] = [
     'correctedseriesname': 'Scrubs',
     'seasonnumber': 1, 'episodenumbers': [1],
     'episodenames': ['My First Day']},
+
+    {'input': 'Scrubs - [01.01].avi',
+    'parsedseriesname': 'Scrubs',
+    'correctedseriesname': 'Scrubs',
+    'seasonnumber': 1, 'episodenumbers': [1],
+    'episodenames': ['My First Day']},
+
+    {'input': '30 Rock [2.10] Episode 210.avi',
+    'parsedseriesname': '30 Rock',
+    'correctedseriesname': '30 Rock',
+    'seasonnumber': 2, 'episodenumbers': [10],
+    'episodenames': ['Episode 210']},
+
+    {'input': 'scrubs.s01_e01.avi',
+    'parsedseriesname': 'Scrubs',
+    'correctedseriesname': 'Scrubs',
+    'seasonnumber': 1, 'episodenumbers': [1],
+    'episodenames': ['My First Day']},
+
+    {'input': 'scrubs - s01 - e02 - something.avi',
+    'parsedseriesname': 'Scrubs',
+    'correctedseriesname': 'Scrubs',
+    'seasonnumber': 1, 'episodenumbers': [2],
+    'episodenames': ['My Mentor']},
 ]
 
 files['misc'] = [
@@ -119,7 +137,7 @@ files['misc'] = [
     'parsedseriesname': 'Six Feet Under',
     'correctedseriesname': 'Six Feet Under',
     'seasonnumber': 2, 'episodenumbers': [1],
-    'episodenames': ['In The Game']},
+    'episodenames': ['In the Game']},
 
     {'input': 'Sid.The.Science.Kid.E11.The.Itchy.Tag.WS.ABC.DeF-HIJK',
     'parsedseriesname': 'Sid The Science Kid',
@@ -139,6 +157,11 @@ files['misc'] = [
     'seasonnumber': 6, 'episodenumbers': [3],
     'episodenames': ['Episode 1350']},
 
+    {'input': 'Scrubs Season 01 Episode 01 - The Series Title.avi',
+    'parsedseriesname': 'Scrubs',
+    'correctedseriesname': 'Scrubs',
+    'seasonnumber': 1, 'episodenumbers': [1],
+    'episodenames': ['My First Day']},
 ]
 
 files['multiple_episodes'] = [
@@ -189,6 +212,18 @@ files['multiple_episodes'] = [
     'correctedseriesname': 'Scrubs',
     'seasonnumber': 2, 'episodenumbers': [1, 2, 3],
     'episodenames': ['My Overkill', 'My Nightingale', 'My Case Study']},
+
+    {'input': 'Scrubs - [02x01+02]',
+    'parsedseriesname': 'scrubs',
+    'correctedseriesname': 'Scrubs',
+    'seasonnumber': 2, 'episodenumbers': [1, 2],
+    'episodenames': ['My Overkill', 'My Nightingale']},
+
+    {'input': 'Scrubs 2x01+02',
+    'parsedseriesname': 'scrubs',
+    'correctedseriesname': 'Scrubs',
+    'seasonnumber': 2, 'episodenumbers': [1, 2],
+    'episodenames': ['My Overkill', 'My Nightingale']},
 
     {'input': 'Flight.of.the.Conchords.S01E01-02.An.Ep.name.avi',
     'parsedseriesname': 'Flight of the Conchords',
@@ -267,47 +302,53 @@ files['unicode'] = [
 ]
 
 files['anime'] = [
-    {'input': '[Eclipse] Fullmetal Alchemist Brotherhood - 02 (1280x720 h264) [8452C4BF]',
+    {'input': '[Eclipse] Fullmetal Alchemist Brotherhood - 02 (1280x720 h264) [8452C4BF].mkv',
     'parsedseriesname': 'Fullmetal Alchemist Brotherhood',
     'correctedseriesname': 'Fullmetal Alchemist: Brotherhood',
     'seasonnumber': None, 'episodenumbers': [2],
     'episodenames': ['The First Day']},
 
-    {'input': '[Shinsen-Subs] Armored Trooper Votoms - Pailsen Files - 01 [9E3F1D1C]',
-    'parsedseriesname': 'armored trooper votoms - pailsen files',
-    'correctedseriesname': 'Armored Trooper Votoms: Pailsen Files',
+    {'input': '[Shinsen-Subs] Armored Trooper Votoms - 01 [9E3F1D1C].mkv',
+    'parsedseriesname': 'armored trooper votoms',
+    'correctedseriesname': 'Armored Trooper VOTOMS',
     'seasonnumber': None, 'episodenumbers': [1],
-    'episodenames': ['River Crossing Strategy']},
+    'episodenames': ['War\'s End']},
 
-    {'input': '[Shinsen-Subs] Beet - 19 [24DAB497]',
+    {'input': '[Shinsen-Subs] Beet - 19 [24DAB497].mkv',
     'parsedseriesname': 'beet',
-    'correctedseriesname': 'Beet the Vandel Buster Excellion',
+    'correctedseriesname': 'Beet the Vandel Buster',
     'seasonnumber': None, 'episodenumbers': [19],
-    'episodenames': ['Windfang Flash! The Soul of a Wind Mage!']},
+    'episodenames': ['Threat of the Planet Earth']},
 
-    {'input': '[AG-SHS]Victory_Gundam-03_DVD[FC6E3A6F]',
+    {'input': '[AG-SHS]Victory_Gundam-03_DVD[FC6E3A6F].mkv',
     'parsedseriesname': 'victory gundam',
     'correctedseriesname': 'Mobile Suit Victory Gundam',
     'seasonnumber': None, 'episodenumbers': [3],
     'episodenames': ['Uso\'s Fight']},
 
-    {'input': '[YuS-SHS]Gintama-24(H264)_[52CA4F8B]',
+    {'input': '[YuS-SHS]Gintama-24(H264)_[52CA4F8B].mkv',
     'parsedseriesname': 'gintama',
     'correctedseriesname': 'Gintama',
     'seasonnumber': None, 'episodenumbers': [24],
     'episodenames': ['A Cute Face is Always Hiding Something']},
 
-    {'input': '[Shinsen-Subs] True Mazinger - 07 [848x480 H.264 Vorbis][787D0074]',
+    {'input': '[Shinsen-Subs] True Mazinger - 07 [848x480 H.264 Vorbis][787D0074].mkv',
     'parsedseriesname': 'True Mazinger',
     'correctedseriesname': 'True Mazinger: Shocking! Z Chapter',
     'seasonnumber': None, 'episodenumbers': [7],
     'episodenames': ['Legend! The Mechanical Beasts of Bardos!']},
 
-    {'input': '[BSS]_Tokyo_Magnitude_8.0_-_02_[0E5C4A40]',
+    {'input': '[BSS]_Tokyo_Magnitude_8.0_-_02_[0E5C4A40].mkv',
     'parsedseriesname': 'tokyo magnitude 8.0',
     'correctedseriesname': 'Tokyo Magnitude 8.0',
     'seasonnumber': None, 'episodenumbers': [2],
     'episodenames': ['Broken World']},
+
+    {'input': 'Bleach - [310] - Ichigo\'s Resolution.avi',
+    'parsedseriesname': 'Bleach',
+    'correctedseriesname': 'Bleach',
+    'seasonnumber': None, 'episodenumbers': [310],
+    'episodenames': ['Ichigo\'s Resolution']},
 ]
 
 files['date_based'] = [
@@ -316,6 +357,7 @@ files['date_based'] = [
     'correctedseriesname': 'Scrubs',
     'episodenumbers': [datetime.date(2001, 10, 2)],
     'episodenames': ['My First Day']},
+
     {'input': 'yes.we.canberra.2010.08.18.pdtv.xvid',
     'parsedseriesname': 'yes we canberra',
     'correctedseriesname': 'Yes We Canberra',
@@ -328,6 +370,54 @@ files['x_of_x'] = [
     'parsedseriesname': 'Scrubs',
     'correctedseriesname': 'Scrubs',
     'seasonnumber': None, 'episodenumbers': [1],
+    'episodenames': ['My First Day']},
+
+    {'input': 'Scrubs part 1.avi',
+    'parsedseriesname': 'Scrubs',
+    'correctedseriesname': 'Scrubs',
+    'seasonnumber': None, 'episodenumbers': [1],
+    'episodenames': ['My First Day']},
+
+    {'input': 'Scrubs part 1 of 10.avi', # only one episode, as it's not "1 to 10"
+    'parsedseriesname': 'Scrubs',
+    'correctedseriesname': 'Scrubs',
+    'seasonnumber': None, 'episodenumbers': [1],
+    'episodenames': ['My First Day']},
+
+    {'input': 'Scrubs part 1 and part 2.avi',
+    'parsedseriesname': 'Scrubs',
+    'correctedseriesname': 'Scrubs',
+    'seasonnumber': None, 'episodenumbers': [1, 2],
+    'episodenames': ['My First Day', 'My Mentor']},
+
+    {'input': 'Scrubs part 1 to part 3.avi',
+    'parsedseriesname': 'Scrubs',
+    'correctedseriesname': 'Scrubs',
+    'seasonnumber': None, 'episodenumbers': [1, 2, 3],
+    'episodenames': ['My First Day', 'My Mentor', 'My Best Friend\'s Mistake']},
+
+    {'input': 'Scrubs part 1 to 4.avi',
+    'parsedseriesname': 'Scrubs',
+    'correctedseriesname': 'Scrubs',
+    'seasonnumber': None, 'episodenumbers': [1, 2, 3, 4],
+    'episodenames': ['My First Day', 'My Mentor', 'My Best Friend\'s Mistake', 'My Old Lady']},
+
+]
+
+
+files['no_series_name'] = [
+    {'input': 's01e01.avi',
+    'force_name': 'Scrubs',
+    'parsedseriesname': None,
+    'correctedseriesname': 'Scrubs',
+    'seasonnumber': 1, 'episodenumbers': [1],
+    'episodenames': ['My First Day']},
+
+    {'input': '[01x01].avi',
+    'force_name': 'Scrubs',
+    'parsedseriesname': None,
+    'correctedseriesname': 'Scrubs',
+    'seasonnumber': 1, 'episodenumbers': [1],
     'episodenames': ['My First Day']},
 ]
 

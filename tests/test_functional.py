@@ -1,10 +1,4 @@
 #!/usr/bin/env python
-#encoding:utf-8
-#author:dbr/Ben
-#project:tvnamer
-#repository:http://github.com/dbr/tvnamer
-#license:Creative Commons GNU GPL v2
-# http://creativecommons.org/licenses/GPL/2.0/
 
 """Functional tests for tvnamer tests
 """
@@ -235,5 +229,35 @@ def test_no_seasonnumber():
         with_flags = ['--batch'])
 
     expected_files = ['Scrubs - [01] - My First Day.avi']
+
+    verify_out_data(out_data, expected_files)
+
+
+@attr("functional")
+def test_skipping_after_replacements():
+    """When custom-replacement is specified, should still skip file if name is correct
+    """
+
+    conf = """
+    {"select_first": true,
+    "input_filename_replacements": [
+        {"is_regex": false,
+        "match": "v",
+        "replacement": "u"}
+    ],
+    "output_filename_replacements": [
+        {"is_regex": false,
+        "match": "u",
+        "replacement": "v"}
+    ]
+    }
+    """
+
+    out_data = run_tvnamer(
+        with_files = ['Scrvbs - [01x01] - My First Day.avi'],
+        with_config = conf,
+        with_input = "")
+
+    expected_files = ['Scrvbs - [01x01] - My First Day.avi']
 
     verify_out_data(out_data, expected_files)

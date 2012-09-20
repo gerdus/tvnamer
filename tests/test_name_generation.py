@@ -1,10 +1,4 @@
 #!/usr/bin/env python
-#encoding:utf-8
-#author:dbr/Ben
-#project:tvnamer
-#repository:http://github.com/dbr/tvnamer
-#license:Creative Commons GNU GPL v2
-# http://creativecommons.org/licenses/GPL/2.0/
 
 """Test tvnamer's EpisodeInfo file name generation
 """
@@ -34,7 +28,7 @@ def verify_name_gen(curtest, tvdb_instance):
             seriesname = curtest['parsedseriesname'],
             episodenumbers = curtest['episodenumbers'])
 
-    ep.populateFromTvdb(tvdb_instance)
+    ep.populateFromTvdb(tvdb_instance, force_name = curtest.get("force_name"))
 
     assert ep.seriesname is not None, "Corrected series name was none"
     assert ep.episodename is not None, "Episode name was None"

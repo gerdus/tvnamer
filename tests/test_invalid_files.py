@@ -1,10 +1,4 @@
 #!/usr/bin/env python
-#encoding:utf-8
-#author:dbr/Ben
-#project:tvnamer
-#repository:http://github.com/dbr/tvnamer
-#license:Creative Commons GNU GPL v2
-# http://creativecommons.org/licenses/GPL/2.0/
 
 """Ensure that invalid files (non-episodes) are not renamed
 """
@@ -15,13 +9,27 @@ from nose.plugins.attrib import attr
 
 @attr("functional")
 def test_simple_single_file():
-    """Files without series name should be skipped
+    """Boring example
     """
 
     out_data = run_tvnamer(
-        with_files = ['S01E02 - Some File.avi'],
+        with_files = ['Some File.avi'],
         with_flags = ["--batch"])
 
-    expected_files = ['S01E02 - Some File.avi']
+    expected_files = ['Some File.avi']
+
+    verify_out_data(out_data, expected_files, expected_returncode = 2)
+
+
+@attr("functional")
+def test_no_series_name():
+    """File without series name should be skipped (unless '--name=MySeries' arg is supplied)
+    """
+
+    out_data = run_tvnamer(
+        with_files = ['s01e01 Some File.avi'],
+        with_flags = ["--batch"])
+
+    expected_files = ['s01e01 Some File.avi']
 
     verify_out_data(out_data, expected_files, expected_returncode = 2)

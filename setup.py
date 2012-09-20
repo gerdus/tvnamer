@@ -1,15 +1,33 @@
 """Setup tools for tvnamer,
 """
 
+import os
+import sys
+
+# Ensure dir containing script is on PYTHONPATH
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from tvnamer import __version__
+
+needed_pkgs = []
+
+try:
+    import json
+except ImportError:
+    needed_pkgs.append('simplejson')
+
+needed_pkgs.append("tvdb_api>=1.5")
+
+
 from setuptools import setup
 setup(
 name = 'tvnamer',
-version='2.1',
+version=".".join(str(x) for x in __version__),
 
 author='dbr/Ben',
 description='Automatic TV episode namer',
 url='http://github.com/dbr/tvnamer',
-license='GPLv2',
+license='unlicense',
 
 long_description="""\
 Automatically names downloaded/recorded TV-episodes, by parsing filenames and
@@ -28,12 +46,12 @@ entry_points = {
     ],
 },
 
-install_requires = ['tvdb_api>=1.5', 'simplejson'],
+install_requires = needed_pkgs,
 
 classifiers=[
     "Environment :: Console",
     "Intended Audience :: End Users/Desktop",
-    "License :: OSI Approved :: GNU General Public License (GPL)",
+    # "License :: Unlicense",
     "Natural Language :: English",
     "Operating System :: OS Independent",
     "Programming Language :: Python",

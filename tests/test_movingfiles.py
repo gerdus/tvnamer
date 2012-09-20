@@ -1,10 +1,4 @@
 #!/usr/bin/env python
-#encoding:utf-8
-#author:dbr/Ben
-#project:tvnamer
-#repository:http://github.com/dbr/tvnamer
-#license:Creative Commons GNU GPL v2
-# http://creativecommons.org/licenses/GPL/2.0/
 
 """Tests moving renamed files
 """
@@ -146,7 +140,8 @@ def test_with_invalid_seriesname():
     conf = """
     {"move_files_enable": true,
     "move_files_destination": "%(seriesname)s",
-    "batch": true}
+    "batch": true,
+    "windows_safe_filenames": true}
     """
 
     out_data = run_tvnamer(
@@ -170,8 +165,8 @@ def test_with_invalid_seriesname_test2():
     "move_files_fullpath_replacements": [
          {"is_regex": true,
           "match": "CSI_ Miami",
-          "replacement": "CSI"}]
-    }
+          "replacement": "CSI"}],
+    "windows_safe_filenames": true}
     """
 
     out_data = run_tvnamer(
@@ -179,5 +174,224 @@ def test_with_invalid_seriesname_test2():
         with_config = conf)
 
     expected_files = ['CSI/CSI - [01x01] - Golden Parachute.avi']
+
+    verify_out_data(out_data, expected_files)
+
+
+@attr("functional")
+def test_move_files_lowercase_destination():
+    """Test move_files_lowercase_destination configuration option.
+    """
+
+    conf = """
+    {"move_files_enable": true,
+    "move_files_destination": "Test/This/%(seriesname)s/S%(seasonnumber)02d",
+    "move_files_lowercase_destination": true,
+    "batch": true}
+    """
+
+    out_data = run_tvnamer(
+        with_files = ['scrubs.s01e01.This.Is.a.Test.avi'],
+        with_config = conf,
+        with_input = "")
+
+    expected_files = ['Test/This/scrubs/S01/Scrubs - [01x01] - My First Day.avi']
+
+    verify_out_data(out_data, expected_files)
+
+
+@attr("functional")
+def test_move_date_based_episode():
+    """Moving a date-base episode (lighthouse ticket #56)
+    """
+
+    conf = """
+    {"move_files_enable": true,
+    "move_files_destination_date": "Test/%(seriesname)s/%(year)s/%(month)s/%(day)s",
+    "move_files_lowercase_destination": true,
+    "batch": true}
+    """
+
+    out_data = run_tvnamer(
+        with_files = ['The Colbert Report - 2011-09-28 Ken Burns.avi'],
+        with_config = conf,
+        with_input = "")
+
+    expected_files = ['Test/The Colbert Report/2011/9/28/The Colbert Report - [2011-09-28] - Ken Burns.avi']
+
+    verify_out_data(out_data, expected_files)
+
+
+@attr("functional")
+def test_move_files_full_filepath_simple():
+    """Moving file destination including a fixed filename
+    """
+
+    conf = """
+    {"move_files_enable": true,
+    "move_files_destination": "TestDir/%(seriesname)s/season %(seasonnumber)02d/%(episodenumbers)s/SpecificName.avi",
+    "move_files_destination_is_filepath": true,
+    "batch": true}
+    """
+
+    out_data = run_tvnamer(
+        with_files = ['scrubs.s01e02.avi'],
+        with_config = conf,
+        with_input = "")
+
+    expected_files = ['TestDir/Scrubs/season 01/02/SpecificName.avi']
+
+    verify_out_data(out_data, expected_files)
+
+
+@attr("functional")
+def test_move_files_full_filepath_with_origfilename():
+    """Moving file destination including a filename
+    """
+
+    conf = """
+    {"move_files_enable": true,
+    "move_files_destination": "TestDir/%(seriesname)s/season %(seasonnumber)02d/%(episodenumbers)s/%(originalfilename)s",
+    "move_files_destination_is_filepath": true,
+    "batch": true}
+    """
+
+    out_data = run_tvnamer(
+        with_files = ['scrubs.s01e01.avi', 'scrubs.s01e02.avi'],
+        with_config = conf,
+        with_input = "")
+
+    expected_files = [
+        'TestDir/Scrubs/season 01/01/scrubs.s01e01.avi',
+        'TestDir/Scrubs/season 01/02/scrubs.s01e02.avi']
+
+    verify_out_data(out_data, expected_files)
+
+
+@attr("functional")
+def test_move_with_correct_name():
+    """Files with correct name should still be moved
+    """
+
+    conf = """
+    {"move_files_enable": true,
+    "move_files_destination": "SubDir",
+    "batch": true}
+    """
+
+    out_data = run_tvnamer(
+        with_files = ['Scrubs - [01x02] - My Mentor.avi'],
+        with_config = conf,
+        with_input = "y\n")
+
+    expected_files = ['SubDir/Scrubs - [01x02] - My Mentor.avi']
+
+    verify_out_data(out_data, expected_files)
+
+
+@attr("functional")
+def test_move_no_season():
+    """Files with no season number should moveable [#94]
+    """
+
+    conf = """
+    {"move_files_enable": true,
+    "move_files_destination": "SubDir",
+    "batch": true}
+    """
+
+    out_data = run_tvnamer(
+        with_files = ['Scrubs - [02] - My Mentor.avi'],
+        with_config = conf,
+        with_input = "y\n")
+
+    expected_files = ['SubDir/Scrubs - [02] - My Mentor.avi']
+
+    verify_out_data(out_data, expected_files)
+
+
+@attr("functional")
+def test_move_files_only():
+    """With parameter move_files_only set to true files should be moved and not renamed
+    """
+
+    conf = """
+    {"move_files_only": true,
+    "move_files_enable": true,
+    "move_files_destination": "tv/%(seriesname)s/season %(seasonnumber)d/",
+    "batch": true}
+    """
+
+    out_data = run_tvnamer(
+        with_files = ['scrubs.s01e01.avi'],
+        with_config = conf)
+
+    expected_files = ['tv/Scrubs/season 1/scrubs.s01e01.avi']
+
+    verify_out_data(out_data, expected_files)
+
+
+@attr("functional")
+def test_forcefully_moving_enabled():
+    """Forcefully moving files, overwriting destination
+    """
+
+    conf = """
+    {"move_files_enable": true,
+    "move_files_destination": "tv/%(seriesname)s/season %(seasonnumber)d/",
+    "batch": true,
+    "overwrite_destination_on_move": true}
+    """
+
+    out_data = run_tvnamer(
+        with_files = ['scrubs.s01e01.avi', 'Scrubs - [01x01] - My First Day.avi'],
+        with_config = conf)
+
+    expected_files = ['tv/Scrubs/season 1/Scrubs - [01x01] - My First Day.avi']
+
+    verify_out_data(out_data, expected_files)
+
+
+@attr("functional")
+def test_forcefully_moving_disabled():
+    """Explicitly disable forcefully moving files
+    """
+
+    conf = """
+    {"move_files_enable": true,
+    "move_files_destination": "tv/%(seriesname)s/season %(seasonnumber)d/",
+    "batch": true,
+    "overwrite_destination_on_move": false}
+    """
+
+    out_data = run_tvnamer(
+        with_files = ['scrubs.s01e01.avi', 'scrubs - [01x01].avi'],
+        with_config = conf)
+
+    expected_files = [
+        'Scrubs - [01x01] - My First Day.avi',
+        'tv/Scrubs/season 1/Scrubs - [01x01] - My First Day.avi']
+
+    verify_out_data(out_data, expected_files)
+
+
+@attr("functional")
+def test_forcefully_moving_default():
+    """Ensure default is not overwrite destination
+    """
+
+    conf = """
+    {"move_files_enable": true,
+    "move_files_destination": "tv/%(seriesname)s/season %(seasonnumber)d/",
+    "batch": true}
+    """
+
+    out_data = run_tvnamer(
+        with_files = ['scrubs.s01e01.avi', 'scrubs - [01x01].avi'],
+        with_config = conf)
+
+    expected_files = [
+        'Scrubs - [01x01] - My First Day.avi',
+        'tv/Scrubs/season 1/Scrubs - [01x01] - My First Day.avi']
 
     verify_out_data(out_data, expected_files)

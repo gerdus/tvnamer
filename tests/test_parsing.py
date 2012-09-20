@@ -1,10 +1,4 @@
 #!/usr/bin/env python
-#encoding:utf-8
-#author:dbr/Ben
-#project:tvnamer
-#repository:http://github.com/dbr/tvnamer
-#license:Creative Commons GNU GPL v2
-# http://creativecommons.org/licenses/GPL/2.0/
 
 """Test tvnamer's filename parser
 """
@@ -105,13 +99,17 @@ def test_autogen_names():
 
 
 def check_case(curtest):
-    """Runs test case, used by test_generator
+    """Runs test case, used by test_parsing_generator
     """
     parser = FileParser(curtest['input'])
     theep = parser.parse()
-    assert theep.seriesname.lower() == curtest['parsedseriesname'].lower(), "%s == %s" % (
-        theep.seriesname.lower(),
-        curtest['parsedseriesname'].lower())
+
+    if theep.seriesname is None and curtest['parsedseriesname'] is None:
+        pass # allow for None seriesname
+    else:
+        assert theep.seriesname.lower() == curtest['parsedseriesname'].lower(), "%s == %s" % (
+            theep.seriesname.lower(),
+            curtest['parsedseriesname'].lower())
 
     assertEquals(theep.episodenumbers, curtest['episodenumbers'])
     if not isinstance(theep, (DatedEpisodeInfo, NoSeasonEpisodeInfo)):

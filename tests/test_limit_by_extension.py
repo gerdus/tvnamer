@@ -1,10 +1,4 @@
 #!/usr/bin/env python
-#encoding:utf-8
-#author:dbr/Ben
-#project:tvnamer
-#repository:http://github.com/dbr/tvnamer
-#license:Creative Commons GNU GPL v2
-# http://creativecommons.org/licenses/GPL/2.0/
 
 """Tests the valid_extensions config option
 """
@@ -55,6 +49,7 @@ def test_single_extensions():
         'Scrubs - [01x02] - My Mentor.mkv']
 
     verify_out_data(out_data, expected_files)
+
 
 @attr("functional")
 def test_single_extension_with_subdirs():

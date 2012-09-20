@@ -1,16 +1,11 @@
 #!/usr/bin/env python
-#encoding:utf-8
-#author:dbr/Ben
-#project:tvnamer
-#repository:http://github.com/dbr/tvnamer
-#license:Creative Commons GNU GPL v2
-# http://creativecommons.org/licenses/GPL/2.0/
 
 """Constructs command line argument parser for tvnamer
 """
 
 from __future__ import with_statement
-from optparse import OptionParser, OptionGroup
+import sys
+import optparse
 
 
 class Group(object):
@@ -20,7 +15,7 @@ class Group(object):
     def __init__(self, parser, name):
         self.parser = parser
         self.name = name
-        self.group = OptionGroup(self.parser, name)
+        self.group = optparse.OptionGroup(self.parser, name)
 
     def __enter__(self):
         return self.group
@@ -30,14 +25,22 @@ class Group(object):
 
 
 def getCommandlineParser(defaults):
-    parser = OptionParser(usage = "%prog [options] <files>", add_help_option = False)
+    parser = optparse.OptionParser(usage = "%prog [options] <files>", add_help_option = False)
+
+    if sys.version_info < (2, 6, 5):
+        # Hacky workaround to avoid bug in Python 2.6.1 triggered by use of builtin json module in 2.6
+        # http://bugs.python.org/issue4978
+        # http://bugs.python.org/issue2646
+
+        #TODO: Remove this at some point
+        defaults = dict([(str(k), v) for k, v in defaults.items()])
 
     parser.set_defaults(**defaults)
 
     # Console output
     with Group(parser, "Console output") as g:
         g.add_option("-v", "--verbose", action="store_true", dest="verbose", help = "show debugging info")
-        g.add_option("-q", "--quiet", action="store_false", dest="verbose", help = "no verbose output")
+        g.add_option("-q", "--not-verbose", action="store_false", dest="verbose", help = "no verbose output (useful to override 'verbose':true in config file)")
 
 
     # Batch options
@@ -58,6 +61,11 @@ def getCommandlineParser(defaults):
         g.add_option("-s", "--save", action = "store", dest = "saveconfig", help = "Save configuration to this file and exit")
         g.add_option("-p", "--preview-config", action = "store_true", dest = "showconfig", help = "Show current config values and exit")
 
+    # Override values
+    with Group(parser, "Override values") as g:
+        g.add_option("-n", "--name", action="store", dest = "force_name", help = "override the parsed series name with this (applies to all files)")
+        g.add_option("--series-id", action="store", dest = "series_id", help = "explicitly set the show id for TVdb to use (applies to all files)")
+
     # Misc
     with Group(parser, "Misc") as g:
         g.add_option("-r", "--recursive", action="store_true", dest = "recursive", help = "Descend more than one level directories supplied as arguments")
@@ -73,8 +81,11 @@ def getCommandlineParser(defaults):
 
     return parser
 
+
 if __name__ == '__main__':
+
     def main():
         p = getCommandlineParser({'recursive': True})
         print p.parse_args()
+
     main()
