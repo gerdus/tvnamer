@@ -550,6 +550,8 @@ class EpisodeInfo(object):
         self.episodenumbers = episodenumbers
         self.episodename = episodename
         self.fullpath = filename
+        self.absolutenumber = None
+        
         if filename is not None:
             # Remains untouched, for use when renaming file
             self.originalfilename = os.path.basename(filename)
@@ -640,6 +642,9 @@ class EpisodeInfo(object):
         else:
             seasonnumber = self.seasonnumber
 
+        is_absolute_with_season = False
+        absolute_with_season = {}
+        
         epnames = []
         for cepno in self.episodenumbers:
             try:
@@ -667,6 +672,11 @@ class EpisodeInfo(object):
                             "No episode actually matches %s, found %s results instead" % (cepno, len(sr)))
                 elif len(sr) == 1:
                     epnames.append(sr[0]['episodename'])
+                    is_absolute_with_season = True
+                    absolute_with_season['seasonnumber'] = int(sr[0]['seasonnumber'])
+                    absolute_with_season['episodenumber'] = int(sr[0]['episodenumber'])
+                    absolute_with_season['absolutenumber'] = cepno
+                    
                 else:
                     raise EpisodeNotFound(
                         "Episode %s of show %s, season %s could not be found (also tried searching by absolute episode number)" % (
@@ -679,6 +689,12 @@ class EpisodeInfo(object):
                     "Could not find episode name for %s" % cepno)
             else:
                 epnames.append(episodeinfo['episodename'])
+
+        if is_absolute_with_season:
+            self.seasonnumber = absolute_with_season['seasonnumber']
+            self.episodenumbers = [absolute_with_season['episodenumber'],]   
+            self.absolutenumber = absolute_with_season['absolutenumber']
+      
 
         self.episodename = epnames
 
@@ -885,6 +901,42 @@ class AnimeEpisodeInfo(NoSeasonEpisodeInfo):
 
     CFG_KEY_WITH_EP_NO_CRC = "filename_anime_with_episode_without_crc"
     CFG_KEY_WITHOUT_EP_NO_CRC = "filename_anime_without_episode_without_crc"
+    
+    def __init__(self,
+        seriesname,
+        episodenumbers,
+        episodename = None,
+        filename = None,
+        extra = None):
+        NoSeasonEpisodeInfo.__init__(self, seriesname, episodenumbers, episodename, filename, extra)
+        self.seasonnumber = 1
+    
+    def getepdata(self):
+        """
+        Uses the following config options:
+        filename_with_episode # Filename when episode name is found
+        filename_without_episode # Filename when no episode can be found
+        episode_single # formatting for a single episode number
+        episode_separator # used to join multiple episode numbers
+        """
+        # Format episode number into string, or a list
+        epno = formatEpisodeNumbers(self.episodenumbers)
+
+        # Data made available to config'd output file format
+        if self.extension is None:
+            prep_extension = ''
+        else:
+            prep_extension = '.%s' % self.extension
+
+        epdata = {
+            'seriesname': self.seriesname,
+            'seasonnumber': self.seasonnumber,
+            'episode': epno,
+            'episodename': self.episodename,
+            'ext': prep_extension,
+            'absolutenumber': self.absolutenumber}
+
+        return epdata    
 
     def generateFilename(self, lowercase = False, preview_orig_filename = False):
         epdata = self.getepdata()

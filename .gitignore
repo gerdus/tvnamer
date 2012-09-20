@@ -2,3 +2,5 @@
 *.pyc
 tvnamer.egg-info/*
 /nbproject
+.project
+.pydevproject
